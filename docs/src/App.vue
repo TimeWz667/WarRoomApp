@@ -1,6 +1,14 @@
 <template>
-  <router-view></router-view>
+  <div>
+    <preview></preview>
+  </div>
+
 </template>
+
+<script setup>
+import Preview from './pages/Preview.vue'
+</script>
+
 
 <style>
 #app {

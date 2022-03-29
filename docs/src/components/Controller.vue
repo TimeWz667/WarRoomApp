@@ -33,7 +33,7 @@
         </div>
 
         <div class="input-group" v-for="par in intv.Pars">
-            <label :for="par.name">{{par.name + " " + Math.round(par.value * 100) + "%"}}</label>
+            <label :for="par.name">{{par.label + " " + Math.round(par.value * 100) + "%"}}</label>
             <input class="form-control" :id="par.name" :name="par.name" type="range" :min="par.min" :max="par.max" step="0.01"
                    v-model="par.value">
         </div>
