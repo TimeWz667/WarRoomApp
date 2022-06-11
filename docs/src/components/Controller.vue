@@ -1,66 +1,89 @@
 <template>
   <div>
-    <form id="location">
-      <h4>Settings</h4>
-      <div class="form-group">
-        <div class="form-floating mb-12 mt-12">
-          <select class="form-select" id="loc_sel" name="sel1" v-model="SelLoc">
-            <option :value="loc" v-for="loc in Locations">{{ loc }}</option>
-          </select>
-          <label for="sel1" class="form-label">{{ `Location: (current=${CurLoc})`}}</label>
-        </div>
-      </div>
+    <div id="my-accordion" class="accordion" role="tablist">
+      <b-card no-body class="mb-1">
+        <b-card-header header-tag="header" class="p-1 d-grid gap-2" role="tab">
+          <b-button v-b-toggle.accordion-1 variant="dark">{{CurLoc.Location}}</b-button>
+        </b-card-header>
+        <b-collapse id="accordion-1" visible accordion="my-accordion" role="tabpanel">
+          <b-card-body>
+            <form id="location">
+              <div class="form-group">
+                <div class="form-floating mb-12 mt-12">
+                  <select class="form-select" id="loc_sel" name="sel1" v-model="SelLoc">
+                    <option :value="loc" v-for="loc in locations">{{ loc.Location }}</option>
+                  </select>
+                  <label for="sel1" class="form-label">{{ `Location: (current=${CurLoc.Location})`}}</label>
+                </div>
+              </div>
 
-      <div class="form-group">
-        <label for="year1"><h5>Proejction end:&nbsp;</h5></label>
-        <div class="form-check form-check-inline">
-          <input type="radio" class="form-check-input" name="year1" value="2025" v-model="YearEnd" checked>2025
-        </div>
-        <div class="form-check form-check-inline">
-          <input type="radio" class="form-check-input" name="year1" value="2030" v-model="YearEnd">2030
-        </div>
-      </div>
+<!--              <div class="form-group">-->
+<!--                <label for="year1"><h5>Projection end:&nbsp;</h5></label>-->
+<!--                <div class="form-check form-check-inline">-->
+<!--                  <input type="radio" class="form-check-input" name="year1" value="2025" v-model="YearEnd" checked>2025-->
+<!--                </div>-->
+<!--                <div class="form-check form-check-inline">-->
+<!--                  <input type="radio" class="form-check-input" name="year1" value="2030" v-model="YearEnd">2030-->
+<!--                </div>-->
+<!--              </div>-->
 
-      <button type="submit" class="btn btn-block btn-primary" v-on:click="updateSettings">Update</button>
-    </form>
-    <form id="intv">
-      <h4>Interventions</h4>
+              <button type="submit" class="btn btn-block btn-primary" v-on:click="updateSettings">Update</button>
+            </form>
+          </b-card-body>
+        </b-collapse>
+      </b-card>
+      <b-card no-body class="mb-1">
+        <b-card-header header-tag="header" class="p-1  d-grid gap-2" role="tab">
+          <b-button v-b-toggle.accordion-2 variant="dark">Interventions</b-button>
+        </b-card-header>
+        <b-collapse id="accordion-2" accordion="my-accordion" role="tabpanel">
+          <b-card-body>
+            <form id="intv">
+              <div class="action" v-for="intv in IntvForm">
+                <div class="form-switch">
+                  <input class="form-check-input" role="switch" type="checkbox" id="include" v-model="intv.Clicked">
+                  <label class="form-check-label" for="include"><h5>{{ `&nbsp;${intv.Desc}` }}</h5></label>
+                </div>
 
-      <div class="action" v-for="intv in IntvForm">
-        <div class="form-switch">
-          <input class="form-check-input" role="switch" type="checkbox" id="include" v-model="intv.Clicked">
-          <label class="form-check-label" for="include"><h5>{{ `&nbsp;${intv.Desc}` }}</h5></label>
-        </div>
+                <div class="from-group" v-for="par in intv.Pars">
+                  <label :for="par.name" size="sm">{{par.label + " " + Math.round(par.value * 100) + "%"}}</label>
+                  <input class="form-control" :id="par.name" :name="par.name" type="range" :min="par.min" :max="par.max" step="0.01"
+                         v-model="par.value">
+                </div>
+              </div>
 
-        <div class="input-group" v-for="par in intv.Pars">
-            <label :for="par.name">{{par.label + " " + Math.round(par.value * 100) + "%"}}</label>
-            <input class="form-control" :id="par.name" :name="par.name" type="range" :min="par.min" :max="par.max" step="0.01"
-                   v-model="par.value">
-        </div>
+              <b-button-group style="padding-top: 20pt">
+                <button type="submit" class="btn btn-info" v-on:click="revertIntv">Current</button>
+                <button type="submit" class="btn btn-primary" v-on:click="updateIntv">Update</button>
+                <button type="submit" class="btn btn-warning" v-on:click="resetIntv">Reset</button>
+              </b-button-group>
 
-      </div>
-
-      <button type="submit" class="btn btn-primary" v-on:click="updateIntv">Update</button>
-      <button type="submit" class="btn btn-warning" v-on:click="resetIntv">Reset</button>
-
-    </form>
+            </form>
+          </b-card-body>
+        </b-collapse>
+      </b-card>
+    </div>
   </div>
 </template>
 
 <script>
-import intvs from "../lists/interventions";
-
 export default {
   name: "Controller",
+  props: {
+    locations: {
+      type: Array,
+      required: true
+    },
+    IntvForm: {
+      type: Array,
+      required: true
+    }
+  },
   data: function() {
-
     return {
-      Locations: ['India', 'North', 'East', 'West', 'South'],
-      SelLoc: 'India',
-      CurLoc: 'India',
-      YearEnd: 2025,
-      Intv0: JSON.stringify(intvs),
-      IntvForm: intvs
+      SelLoc: this.locations[0],
+      CurLoc: this.locations[0],
+      YearEnd: 2025
     }
   },
   methods: {
@@ -87,26 +110,17 @@ export default {
     },
     resetIntv(evt) {
       evt.preventDefault();
-      this.IntvForm = JSON.parse(this.Intv0);
-      this.updateIntv(evt)
+      this.$emit("intv_reset")
+    },
+    revertIntv(evt) {
+      evt.preventDefault();
+      this.$emit("intv_revert")
     }
   }
 }
 </script>
 
 <style scoped>
-#location {
-  border-radius: 10pt;
-  border-style: solid;
-  padding: 30px;
-}
-
-#intv {
-  border-radius: 10pt;
-  border-style: solid;
-  padding: 30px;
-}
-
 .form-group {
   padding: 10px;
 }

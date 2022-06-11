@@ -1,11 +1,31 @@
 export default [
     {
-        Name: "CS",
-        Desc: "Demand generation",
+        Name: "PPM",
+        Desc: "Private-public mixing",
         Clicked: false,
         Pars: [
             {
-                name: "Scale", label: "Coverage", value:0, min: 0, max: 1
+                name: "Scale", label: "New engaged private", value:0, min: 0, max: 1
+            }
+        ]
+    },
+    {
+        Name: "CS",
+        Desc: "Facilitate care-seeking",
+        Clicked: false,
+        Pars: [
+            {
+                name: "Scale", label: "Care-seeking rate + ", value:0, min: 0, max: 5
+            }
+        ]
+    },
+    {
+        Name: "ImpDx",
+        Desc: "Improved TB diagnosis",
+        Clicked: false,
+        Pars: [
+            {
+                name: "Dx", label: "Diagnosis per visit", value:0, min: 0, max: 1
             }
         ]
     },
@@ -19,40 +39,14 @@ export default [
             }
         ]
     },
-    {
-        Name: "PPM",
-        Desc: "Private-public mixing",
-        Clicked: false,
-        Pars: [
-            {
-                name: "Scale", label: "Coverage", value:0.35, min: 0, max: 1
-            }
-        ]
-    },
-    {
-        Name: "UACF",
-        Desc: "Active case-finding, Urban slum",
-        Clicked: false,
-        Pars: [
-            {
-                name: "Scale", label: "Coverage", value:0, min: 0, max: 1
-            }
-        ]
-    },
-    {
-        Name: "ImpDx",
-        Desc: "Improved TB diagnosis",
-        Clicked: false,
-        Pars: [
-            {
-                name: "Dx", label: "Diagnosis", value:0.95, min: 0, max: 1
-            },
-            {
-                name: "TxI", label: "Tx initialisation", value:0.8, min: 0, max: 1
-            },
-            {
-                name: "Def", label: "Tx compliance", value:1, min: 0, max: 1
-            }
-        ]
-    },
+    // {
+    //     Name: "UACF",
+    //     Desc: "Active case-finding, Urban slum",
+    //     Clicked: false,
+    //     Pars: [
+    //         {
+    //             name: "Scale", label: "Coverage", value:0, min: 0, max: 1
+    //         }
+    //     ]
+    // },
 ]
