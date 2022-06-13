@@ -1,9 +1,8 @@
-const fs = require('fs');
-var odex = require('odex');
-var math = require('mathjs');
+import * as odex from "odex";
+import * as math from "mathjs";
 
 
-class Model {
+export class Model {
     constructor(inp) {
         this.Location = inp.Location;
         this.Pars = inp.Pars;
@@ -187,7 +186,7 @@ class Model {
         const end = s.solve(fn,
             0,
             [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            20,
+            5,
             s.grid(0.01, function(x, y) {
                 for (let j = 0; j < i.Tx_Pub; j++) {
                     dur[j] += y[j] * 0.01
@@ -292,17 +291,3 @@ class Model {
         }
     }
 }
-
-
-let rawdata = fs.readFileSync("src/ppa/pars_wr.json");
-let pars_wr = JSON.parse(rawdata);
-
-let m = new Model(pars_wr.India);
-
-// console.log(m.Y0);
-
-const sim0 = m.sim();
-const sim1 = m.sim({CS: {Scale: 1}})
-console.log(sim0.Epi[10].IncR)
-console.log(sim1.Epi[10].IncR)
-
