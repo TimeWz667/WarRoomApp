@@ -1,8 +1,7 @@
 <template>
   <card-base title="">
-    <fig-ind-map v-on:change-loc="changeLoc" :asp="0.7" :visible="visible" :ava="ava"></fig-ind-map>
+    <fig-ind-map v-on:change-loc="changeLoc" :asp="0.8" :visible="visible" :ava="ava"></fig-ind-map>
     <div>
-      <p>{{ foot }} </p>
     </div>
   </card-base>
 </template>

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="ctrl">
     <div id="my-accordion" class="accordion" role="tablist">
       <b-card no-body class="mb-1">
         <b-card-header header-tag="header" class="p-1 d-grid gap-2" role="tab">
@@ -42,23 +42,38 @@
         <b-card-header header-tag="header" class="p-1  d-grid gap-2" role="tab">
           <b-button v-b-toggle.accordion-2 visible variant="dark">Interventions</b-button>
         </b-card-header>
-        <b-collapse id="accordion-2" accordion="my-accordion" role="tabpanel">
+        <b-collapse id="accordion-2" accordion="my-accordion" role="tabpanel" visible>
           <b-card-body>
             <form id="intv">
+<!--              <div class="action" v-for="(intv, i) in IntvForm">-->
+<!--                <div class="form-switch">-->
+<!--                  <input class="form-check-input" role="switch" type="checkbox" :id="i" v-model="intv.Clicked">-->
+<!--                  <label class="form-check-label" :for="i"><h5>{{ `&nbsp;${intv.Desc} &#9432;` }}</h5></label>-->
+<!--                </div>-->
+
+<!--                <div class="from-group" v-for="par in intv.Pars">-->
+<!--                  <label :for="i + par.name" size="sm">{{par.label + " " + Math.round(par.value * 100) + "%"}}</label>-->
+<!--                  <input class="form-control" :id="i + par.name" :name="par.name" type="range" :min="par.min" :max="par.max" step="0.01"-->
+<!--                         v-model="par.value">-->
+<!--                </div>-->
+<!--              </div>-->
+
               <div class="action" v-for="(intv, i) in IntvForm">
                 <div class="form-switch">
                   <input class="form-check-input" role="switch" type="checkbox" :id="i" v-model="intv.Clicked">
-                  <label class="form-check-label" :for="i"><h5>{{ `&nbsp;${intv.Desc} &#9432;` }}</h5></label>
+                  <label class="form-check-label" v-b-toggle="'intv'+i"><p><b>{{ `&nbsp;${intv.Desc} &#9432;` }}</b></p></label>
                 </div>
 
-                <div class="from-group" v-for="par in intv.Pars">
-                  <label :for="i + par.name" size="sm">{{par.label + " " + Math.round(par.value * 100) + "%"}}</label>
-                  <input class="form-control" :id="i + par.name" :name="par.name" type="range" :min="par.min" :max="par.max" step="0.01"
-                         v-model="par.value">
-                </div>
+                <b-collapse :id="'intv'+i">
+                  <div class="from-group  bg-light" v-for="par in intv.Pars">
+                    <label :for="i + par.name" size="sm">{{par.label + " " + Math.round(par.value * 100) + "%"}}</label>
+                    <input class="form-control" :id="i + par.name" :name="par.name" type="range" :min="par.min" :max="par.max" step="0.01"
+                           v-model="par.value">
+                  </div>
+                </b-collapse>
               </div>
 
-              <b-button-group style="padding-top: 20pt">
+              <b-button-group style="padding-top: 20pt" class="d-flex">
                 <button type="submit" class="btn btn-info" v-on:click="revertIntv">Last</button>
                 <button type="submit" class="btn btn-primary" v-on:click="updateIntv">Keep</button>
                 <button type="submit" class="btn btn-warning" v-on:click="resetIntv">Reset</button>
@@ -150,6 +165,10 @@ export default {
 <style scoped>
 .form-group {
   padding: 10px;
+}
+
+.action {
+  padding-top: 10px;
 }
 
 </style>

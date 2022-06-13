@@ -9,13 +9,13 @@ import * as d3 from "d3";
 
 
 export default {
-  name: "FigTrend",
+  name: "FigCas",
   props: {
-    trace_base: {
+    cas_base: {
       type: Array,
       required: true,
     },
-    trace_intv: {
+    cas_intv: {
       type: Array,
       required: true,
     },
@@ -23,9 +23,13 @@ export default {
       type: String,
       required: true
     },
-    asp: {
-      type: Number,
-      default: 0.4
+    labels: {
+      type: Array,
+      required: true
+    },
+    align: {
+      type: Boolean,
+      default: true
     }
   },
   data() {
@@ -34,22 +38,17 @@ export default {
       g: null,
       width: null,
       height: null,
-      x: null, y: null, xAxis: null, yAxis: null,
+      x: null, xAxis: null,
       colour: null,
-      margin: { top: 10, right: 40, bottom: 55, left: 20 },
+      inter: 30,
+      bar_width: 80
     };
   },
   watch: {
-    visible() {
-      this.resize();
-    },
-    svg_width() {
-      this.resize();
-    },
-    trace_base() {
+    cas_base() {
       this.update();
     },
-    trace_intv() {
+    cas_intv() {
       this.update();
     }
   },
@@ -61,43 +60,18 @@ export default {
     initialise() {
       const size = d3.select("#con" + this.chartId).node().getBoundingClientRect();
       const width = size.width;
-
       this.svg = d3.select("#" + this.chartId);
 
-      const height = width * this.asp;
+      const height = this.bar_width * 2 + this.inter;
       this.width = width;
       this.height = height;
-      this.svg.attr("width", this.width).attr("height", this.height);
 
       this.x = d3
           .scaleLinear()
           .range([this.margin.left, this.width - this.margin.right]);
 
-      this.y = d3
-          .scaleLinear()
-          .nice()
-          .range([this.height - this.margin.bottom, this.margin.top]);
 
-      this.xAxis = d3
-          .axisBottom(this.x)
-          .ticks(5).tickFormat(d3.format(".0f"));
 
-      this.yAxis = d3
-          .axisRight(this.y)
-          .ticks(6);
-
-      this.svg
-          .append("g")
-          .attr("class", "xAxis")
-          .attr(
-              "transform",
-              `translate(0,${this.height - this.margin.bottom})`
-          );
-
-      this.svg
-          .append("g")
-          .attr("class", "yAxis")
-          .attr("transform", `translate(${this.width - this.margin.right},0)`);
 
       this.svg
           .append("text")
@@ -108,56 +82,45 @@ export default {
           )
           .attr("dy", "-0.9em")
           .style("text-anchor", "middle")
-          .text("Year");
+          .text(this.align? "Proportion": "Duration");
 
-      this.svg
-          .append("text")
-          .attr("class", "yLab")
-          .attr("transform", "rotate(-90)")
-          .attr("y", 0)
-          .attr("x", -(this.height / 2) + this.margin.top)
-          .attr("dy", "0.9em")
-          .style("text-anchor", "middle")
-          .text("per 100 000");
-
+      //todo
       this.colours = d3
           .scaleOrdinal()
-          .domain(["Baseline", "Intervention"])
-          .range(["#ffab16", "#23ff4f"]);
+          .domain(["Baseline", "Intervention"]);
 
-      this.x.domain([2022, 2030]);
+      this.x.domain([0, 1]);
 
-      this.svg
-          .select("g.xAxis")
-          .transition()
-          .duration(100)
-          .call(this.xAxis)
-          .selectAll("text")
-          .attr("y", 10)
-          .attr("x", 9)
-          .attr("dy", ".35em")
-          .attr("transform", "rotate(20)")
-          .style("text-anchor", "start");
     },
     update() {
-      this.y.domain([
-        0,
-        1.1 * d3.max(this.trace_base, ent =>
-            ent.Value
-        )
-      ]);
-
-      this.svg
-          .select("g.yAxis")
-          .transition()
-          .duration(100)
-          .call(this.yAxis);
 
       let has_intv = false;
-      if (this.trace_intv.length > 0 &&
-          this.trace_intv[this.trace_intv.length - 1].Value !==this.trace_base[this.trace_base.length - 1].Value ) {
+      if (this.cas_intv.length > 0 &&
+          this.cas_intv[this.cas_intv.length - 1].Value !==this.cas_base[this.cas_base.length - 1].Value ) {
         has_intv = true;
       }
+
+      this.svg
+        .selectAll("rect.box_base")
+        .data(this.cas_base.reduce())
+        .join(
+            enter => {
+              enter
+                .append("rect")
+                .attr("class", "box_base")
+                .attr("x", d => d.x0)
+                .attr("width", d => dx)
+                .attr("y", 0)
+                .attr("height", this.bar_width)
+                .attr("fill", d => this.colours(d.State))
+            },
+            update => {
+
+            },
+            exit => {
+
+            }
+        )
 
       this.svg
           .selectAll("path.line_base")

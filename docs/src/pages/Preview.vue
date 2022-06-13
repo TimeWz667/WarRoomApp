@@ -13,6 +13,7 @@
     </div>
     <div class="col-8">
       <div class="row">
+        <h4>Burden projections</h4>
         <b-card class="col-6" title="Incidence">
             <b-card-text id="fig_container">
               <fig-trend chart-id="g_inc" :asp="0.8" :trace_base="TraceInc.Base" :trace_intv="TraceInc.Intv"/>
@@ -41,10 +42,6 @@
         <div class="col-12">
           <h4>Midstream variables</h4>
           <inter-index :Cascade="SimLive.Cas"></inter-index>
-        </div>
-        <div class="col-12">
-          <h4>Midstream variables</h4>
-          <inter-index :Cascade="Sim0.Cas"></inter-index>
         </div>
       </div>
     </div>

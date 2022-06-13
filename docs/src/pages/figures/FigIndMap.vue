@@ -126,7 +126,7 @@ export default {
       this.svg.attr("width", width).attr("height", height);
 
       this.proj
-          .scale(400)
+          .scale((width < 250)? 300: 400)
           .center([80, 21])
           .translate([width / 2, height / 2]);
 

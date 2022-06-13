@@ -5,28 +5,31 @@ export default [
         Clicked: false,
         Pars: [
             {
-                name: "Scale", label: "New engaged private", value:0, min: 0, max: 1
+                name: "Scale", label: "Prop. remaining private providers to be engaged", value:0, min: 0, max: 1
             }
         ]
     },
     {
         Name: "CS",
-        Desc: "Facilitate care-seeking",
+        Desc: "Reducing symptomatic period",
         Clicked: false,
         Pars: [
             {
-                name: "Scale", label: "Care-seeking rate + ", value:0, min: 0, max: 5
+                name: "Scale", label: "Reduction in time to next care-seeking, %", value:0, min: 0, max: 0.99
             }
         ]
     },
     {
         Name: "ImpDx",
-        Desc: "Improved TB diagnosis",
+        Desc: "Improved TB diagnostics",
         Clicked: false,
         Pars: [
             {
-                name: "Dx", label: "Diagnosis per visit", value:0, min: 0, max: 1
-            }
+                name: "Dx", label: "Prop. of smear facilities replaced by modern dx", value:0, min: 0, max: 1
+            },
+            // {
+            //     name: "TxI", label: "Amongst patients with TB presenting for care, prop. successfully linked to treatment with new dx", value:0, min: 0, max: 1
+            // }
         ]
     },
     {
@@ -35,18 +38,38 @@ export default [
         Clicked: false,
         Pars: [
             {
-                name: "Scale", label: "Coverage", value:0, min: 0, max: 1
+                name: "Scale", label: "Prop. household contacts completing TPT", value:0, min: 0, max: 1
             }
         ]
     },
-    // {
-    //     Name: "UACF",
-    //     Desc: "Active case-finding, Urban slum",
-    //     Clicked: false,
-    //     Pars: [
-    //         {
-    //             name: "Scale", label: "Coverage", value:0, min: 0, max: 1
-    //         }
-    //     ]
-    // },
+    {
+        Name: "UACF",
+        Desc: "*Urban Active Case-Finding",
+        Clicked: false,
+        Pars: [
+            {
+                name: "Scale", label: "Prop. prevalent urban TB dx per year", value:0, min: 0, max: 1
+            }
+        ]
+    },
+    {
+        Name: "Vaccine",
+        Desc: "*Vaccine",
+        Clicked: false,
+        Pars: [
+            {
+                name: "Scale", label: "Prop. LTBIs having vaccine-induced immunity", value:0, min: 0, max: 1
+            },
+            {
+                name: "Year0", label: "Start of vaccine rollout", value:2023, min: 2023, max: 2025
+            },
+            {
+                name: "Eff", label: "Vaccine eff. in reducing TB incidence", value:0, min: 0, max: 1
+            },
+
+        ]
+    },
 ]
+
+
+
